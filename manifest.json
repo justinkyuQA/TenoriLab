@@ -1,0 +1,10 @@
+{
+  "name": "Tenori Lab",
+  "short_name": "Tenori",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#d7dcda",
+  "theme_color": "#e8eee9",
+  "orientation": "portrait",
+  "description": "Touch grid sequencing instrument"
+}

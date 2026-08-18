@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+
+<meta name="theme-color" content="#e8eee9">
+
+<title>Tenori Lab</title>
+
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="css/tenori.css">
+</head>
+
+<body>
+
+<main class="machine">
+
+<header class="top">
+
+    <div>
+        <div class="brand">TENORI LAB</div>
+        <div class="subtitle">LIGHT SEQUENCING INSTRUMENT</div>
+    </div>
+
+    <div class="display">
+        <span id="status">STOP</span>
+        <strong id="display">L1 · PULSE · C MIN</strong>
+    </div>
+
+</header>
+
+
+<section class="controls">
+
+    <button id="prevLayer">◀</button>
+
+    <button id="layerButton">
+        LAYER <span id="layerNumber">1</span>
+    </button>
+
+    <button id="nextLayer">▶</button>
+
+    <select id="voice">
+        <option value="pulse">PULSE</option>
+        <option value="sine">SINE</option>
+        <option value="triangle">TRIANGLE</option>
+        <option value="sawtooth">SAW</option>
+        <option value="square">SQUARE</option>
+        <option value="pluck">PLUCK</option>
+        <option value="metal">METAL</option>
+        <option value="noise">NOISE</option>
+    </select>
+
+</section>
+
+
+<section class="grid-shell">
+
+    <div class="row-labels" id="rowLabels"></div>
+
+    <div class="grid" id="grid"></div>
+
+</section>
+
+
+<section class="transport">
+
+    <button id="play" class="important">
+        ▶ PLAY
+    </button>
+
+    <button id="clear">
+        CLEAR
+    </button>
+
+    <button id="random">
+        RANDOM
+    </button>
+
+    <button id="mute">
+        MUTE LAYER
+    </button>
+
+</section>
+
+
+<section class="parameters">
+
+    <label>
+        BPM
+        <input
+          id="bpm"
+          type="range"
+          min="40"
+          max="240"
+          value="120">
+        <span id="bpmValue">120</span>
+    </label>
+
+    <label>
+        SWING
+        <input
+          id="swing"
+          type="range"
+          min="0"
+          max="70"
+          value="0">
+        <span id="swingValue">0</span>
+    </label>
+
+    <label>
+        ROOT
+
+        <select id="root">
+            <option>C</option>
+            <option>C#</option>
+            <option>D</option>
+            <option>D#</option>
+            <option>E</option>
+            <option>F</option>
+            <option>F#</option>
+            <option>G</option>
+            <option>G#</option>
+            <option>A</option>
+            <option>A#</option>
+            <option>B</option>
+        </select>
+    </label>
+
+    <label>
+        SCALE
+
+        <select id="scale">
+            <option value="minor">MINOR</option>
+            <option value="major">MAJOR</option>
+            <option value="pentatonic">PENTATONIC</option>
+            <option value="dorian">DORIAN</option>
+            <option value="chromatic">CHROMATIC</option>
+        </select>
+    </label>
+
+    <label>
+        OCTAVE
+
+        <input
+          id="octave"
+          type="range"
+          min="1"
+          max="6"
+          value="3">
+
+        <span id="octaveValue">3</span>
+    </label>
+
+</section>
+
+
+<section class="layer-strip" id="layerStrip"></section>
+
+
+<footer>
+    TAP LIGHTS · X = TIME · Y = PITCH
+</footer>
+
+</main>
+
+<script src="js/tenori.js"></script>
+
+<script>
+if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("./sw.js");
+}
+</script>
+
+</body>
+</html>
