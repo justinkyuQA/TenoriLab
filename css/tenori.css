@@ -320,3 +320,159 @@ footer {
         gap: 4px;
     }
 }
+
+
+/* ==========================================================
+   TENORILAB — MUSICAL GRID LANDMARKS
+   4 / 8 / 16 counting system
+   ========================================================== */
+
+/*
+   These rules deliberately augment the existing grid instead
+   of replacing its layout.
+
+   Horizontal:
+       1 2 3 4 | 5 6 7 8 || 9 10 11 12 | 13 14 15 16
+
+   Vertical:
+       rows are visually grouped in blocks of four.
+*/
+
+#grid {
+    --tenori-group-4-gap: 5px;
+    --tenori-group-8-gap: 9px;
+}
+
+
+/* Every fourth COLUMN gets a visible musical boundary. */
+
+#grid > *:nth-child(16n + 4),
+#grid > *:nth-child(16n + 12) {
+    margin-right: var(--tenori-group-4-gap);
+}
+
+
+/* Step eight is the strongest center division. */
+
+#grid > *:nth-child(16n + 8) {
+    margin-right: var(--tenori-group-8-gap);
+}
+
+
+/*
+   Horizontal row grouping.
+
+   16 cells per row means:
+
+   row 4 ends at cell 64
+   row 8 ends at cell 128
+   row 12 ends at cell 192
+*/
+
+#grid > *:nth-child(n + 49):nth-child(-n + 64),
+#grid > *:nth-child(n + 177):nth-child(-n + 192) {
+    margin-bottom: var(--tenori-group-4-gap);
+}
+
+
+/* Row eight receives the stronger midpoint division. */
+
+#grid > *:nth-child(n + 113):nth-child(-n + 128) {
+    margin-bottom: var(--tenori-group-8-gap);
+}
+
+
+/* ---------- counting header ---------- */
+
+.tenori-count-header {
+    display: grid;
+    grid-template-columns: repeat(16, 1fr);
+    align-items: end;
+    gap: 2px;
+
+    width: 100%;
+    margin: 0 0 5px 0;
+
+    font-family: monospace;
+    font-size: 9px;
+    font-weight: 700;
+
+    user-select: none;
+    pointer-events: none;
+}
+
+.tenori-count-step {
+    text-align: center;
+    opacity: .58;
+}
+
+.tenori-count-step.beat-start {
+    opacity: .95;
+    font-weight: 900;
+}
+
+.tenori-count-step.group-end {
+    border-right: 2px solid currentColor;
+}
+
+.tenori-count-step.half-end {
+    border-right-width: 4px;
+}
+
+
+/* ---------- bar numbers ---------- */
+
+.tenori-bar-header {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+
+    width: 100%;
+    margin-bottom: 2px;
+
+    font-family: monospace;
+    font-size: 10px;
+    font-weight: 800;
+
+    letter-spacing: .08em;
+
+    user-select: none;
+    pointer-events: none;
+}
+
+.tenori-bar-header > span {
+    text-align: center;
+    opacity: .7;
+}
+
+
+/* ---------- playhead group ---------- */
+
+#grid > *.tenori-current-quarter {
+    outline: 1px solid currentColor;
+    outline-offset: 0;
+}
+
+
+/*
+   Active cells must remain visually dominant over the
+   quarter-group indicator.
+*/
+
+#grid > *.active.tenori-current-quarter,
+#grid > *.on.tenori-current-quarter {
+    outline-width: 2px;
+}
+
+
+/* ---------- compact mobile labels ---------- */
+
+@media (max-width: 600px) {
+
+    .tenori-count-header {
+        font-size: 7px;
+    }
+
+    .tenori-bar-header {
+        font-size: 8px;
+    }
+}

@@ -1223,3 +1223,285 @@ console.log(
 );
 
 })();
+
+
+/* ============================================================
+   TENORILAB_GROUPED_GRID_V1
+   Visual 4 / 8 / 16 musical counting enhancement
+   ============================================================ */
+
+function installMusicalGridGuide() {
+
+    const grid =
+        document.getElementById("grid");
+
+    if (!grid) {
+        console.warn(
+            "Tenori grouped-grid guide: #grid not found."
+        );
+        return;
+    }
+
+    /*
+     * Avoid duplicate headers if initialization is ever
+     * called more than once.
+     */
+
+    if (
+        document.getElementById(
+            "tenoriMusicalGridGuide"
+        )
+    ) {
+        return;
+    }
+
+
+    const guide =
+        document.createElement("div");
+
+    guide.id =
+        "tenoriMusicalGridGuide";
+
+
+    /* BAR HEADER */
+
+    const bars =
+        document.createElement("div");
+
+    bars.className =
+        "tenori-bar-header";
+
+    for (
+        let bar = 1;
+        bar <= 4;
+        bar++
+    ) {
+
+        const label =
+            document.createElement("span");
+
+        label.textContent =
+            bar;
+
+        bars.appendChild(label);
+    }
+
+
+    /* STEP HEADER */
+
+    const counts =
+        document.createElement("div");
+
+    counts.className =
+        "tenori-count-header";
+
+    for (
+        let step = 0;
+        step < 16;
+        step++
+    ) {
+
+        const label =
+            document.createElement("span");
+
+        label.className =
+            "tenori-count-step";
+
+        /*
+         * Repeat 1 2 3 4 rather than 1–16.
+         *
+         * This makes quarter-note groupings readable
+         * instantly when programming patterns.
+         */
+
+        label.textContent =
+            (step % 4) + 1;
+
+
+        if (
+            step % 4 === 0
+        ) {
+            label.classList.add(
+                "beat-start"
+            );
+        }
+
+
+        if (
+            (step + 1) % 4 === 0
+        ) {
+            label.classList.add(
+                "group-end"
+            );
+        }
+
+
+        if (
+            step === 7
+        ) {
+            label.classList.add(
+                "half-end"
+            );
+        }
+
+
+        counts.appendChild(label);
+    }
+
+
+    guide.appendChild(bars);
+    guide.appendChild(counts);
+
+    grid.parentNode.insertBefore(
+        guide,
+        grid
+    );
+}
+
+
+/*
+ * Highlight the current four-step group.
+ *
+ * This does NOT control sequencing.
+ * It only mirrors the existing playhead.
+ */
+
+function updateMusicalGridGuide() {
+
+    const grid =
+        document.getElementById("grid");
+
+    if (!grid) {
+        return;
+    }
+
+
+    const cells =
+        Array.from(grid.children);
+
+
+    cells.forEach(cell => {
+
+        cell.classList.remove(
+            "tenori-current-quarter"
+        );
+
+    });
+
+
+    /*
+     * Detect the existing playhead using several common
+     * class names without requiring the original engine
+     * to be rewritten.
+     */
+
+    const current =
+        cells.findIndex(cell =>
+            cell.classList.contains("playing") ||
+            cell.classList.contains("playhead") ||
+            cell.classList.contains("current")
+        );
+
+
+    if (current < 0) {
+        return;
+    }
+
+
+    const step =
+        current % 16;
+
+    const quarter =
+        Math.floor(step / 4);
+
+    const start =
+        quarter * 4;
+
+
+    /*
+     * Apply the quarter highlight to every row.
+     */
+
+    for (
+        let row = 0;
+        row < 16;
+        row++
+    ) {
+
+        for (
+            let offset = 0;
+            offset < 4;
+            offset++
+        ) {
+
+            const index =
+                row * 16 +
+                start +
+                offset;
+
+            if (cells[index]) {
+
+                cells[index]
+                    .classList.add(
+                        "tenori-current-quarter"
+                    );
+
+            }
+        }
+    }
+}
+
+
+/*
+ * Observe grid class changes made by the existing
+ * Tenori sequencer. This keeps the guide synchronized
+ * without touching the audio scheduler.
+ */
+
+function watchMusicalGridPlayhead() {
+
+    const grid =
+        document.getElementById("grid");
+
+    if (!grid) {
+        return;
+    }
+
+
+    const observer =
+        new MutationObserver(() => {
+
+            updateMusicalGridGuide();
+
+        });
+
+
+    observer.observe(
+        grid,
+        {
+            subtree: true,
+            attributes: true,
+            attributeFilter: [
+                "class"
+            ]
+        }
+    );
+}
+
+
+/*
+ * Install after the original application has built
+ * its grid.
+ */
+
+window.addEventListener(
+    "load",
+    () => {
+
+        installMusicalGridGuide();
+        watchMusicalGridPlayhead();
+        updateMusicalGridGuide();
+
+    }
+);
+
